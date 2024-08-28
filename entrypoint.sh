@@ -10,4 +10,4 @@ else
 fi
 
 # Run litestream with your app as the subprocess.
-exec litestream replicate -exec "node cli.js bootstrap && pm2-runtime start ecosystem.config.cjs"
+litestream replicate -exec "node cli.js bootstrap && pm2-runtime start ecosystem.config.cjs"

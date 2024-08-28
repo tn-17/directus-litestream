@@ -6,14 +6,10 @@ services:
     restart: unless-stopped
     ports:
       - 8055:8055
-    volumes:
-      - ./data/database:/directus/database
-      - ./data/uploads:/directus/uploads
-      - ./data/extensions:/directus/extensions
-      - ./data/templates:/directus/templates
     environment:
       DB_CLIENT: 'better-sqlite3'
       DB_FILENAME: '/directus/database/database.sqlite'
       DB_POOL__MIN: 0
       DB_POOL__MAX: 4
+      DB_EXCLUDE_TABLES: _litestream_lock
     env_file: .env.directus-litestream

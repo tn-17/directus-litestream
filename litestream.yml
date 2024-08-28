@@ -1,9 +1,6 @@
 dbs:
   - path: ${DB_FILENAME}
     replicas:
-      - type: abs
-        account-name: ${STORAGE_AZURE_ACCOUNT_NAME}
+      - url: ${DB_REPLICA_URL}
         account-key: ${STORAGE_AZURE_ACCOUNT_KEY}
-        bucket: ${BACKUP_AZURE_CONTAINER_NAME}
-        path: ${BACKUP_PATH}
         sync-interval: ${DB_SYNC_INTERVAL}

@@ -50,7 +50,7 @@ RUN tar -C /usr/local/bin -xzf /tmp/litestream.tar.gz
 
 FROM node:18-alpine AS runtime
 
-RUN npm install --global pm2@5
+RUN npm install --global pm2@5 && apk add --no-cache bash
 
 USER node
 

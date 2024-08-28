@@ -5,6 +5,7 @@ export const drivers: Record<Driver, string> = {
 	cockroachdb: 'CockroachDB (Beta)',
 	mysql2: 'MySQL / MariaDB / Aurora',
 	sqlite3: 'SQLite',
+	"better-sqlite3": 'SQLite',
 	mssql: 'Microsoft SQL Server',
 	oracledb: 'Oracle Database',
 };

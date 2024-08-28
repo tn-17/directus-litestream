@@ -67,6 +67,7 @@ const ssl = (): Record<string, string | boolean> => ({
 });
 
 export const databaseQuestions = {
+	"better-sqlite3": [filename],
 	sqlite3: [filename],
 	mysql2: [host, port, database, user, password],
 	pg: [host, port, database, user, password, ssl],

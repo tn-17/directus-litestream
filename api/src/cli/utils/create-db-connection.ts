@@ -21,7 +21,7 @@ export type Credentials = {
 export default function createDBConnection(client: Driver, credentials: Credentials): Knex<any, unknown[]> {
 	let connection: any = {};
 
-	if (client === 'sqlite3') {
+	if (client === 'sqlite3' || client === 'better-sqlite3') {
 		const { filename } = credentials;
 
 		connection = {
@@ -63,7 +63,7 @@ export default function createDBConnection(client: Driver, credentials: Credenti
 		pool: {},
 	};
 
-	if (client === 'sqlite3') {
+	if (client === 'sqlite3' || client === 'better-sqlite3') {
 		knexConfig.useNullAsDefault = true;
 	}
 

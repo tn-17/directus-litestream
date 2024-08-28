@@ -15,12 +15,12 @@ const host = (): Record<string, string> => ({
 	default: '127.0.0.1',
 });
 
-const port = ({ client }: { client: Exclude<Driver, 'sqlite3'> }): Record<string, any> => ({
+const port = ({ client }: { client: Exclude<Driver, 'sqlite3' | 'better-sqlite3'> }): Record<string, any> => ({
 	type: 'input',
 	name: 'port',
 	message: 'Port:',
 	default() {
-		const ports: Record<Exclude<Driver, 'sqlite3'>, number> = {
+		const ports: Record<Exclude<Driver, 'sqlite3' | 'better-sqlite3'>, number> = {
 			pg: 5432,
 			cockroachdb: 26257,
 			mysql2: 3306,

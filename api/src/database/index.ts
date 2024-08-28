@@ -17,6 +17,7 @@ import type { DatabaseClient } from '../types/index.js';
 import { getConfigFromEnv } from '../utils/get-config-from-env.js';
 import { validateEnv } from '../utils/validate-env.js';
 import { getHelpers } from './helpers/index.js';
+import emitter from '../emitter.js';
 
 type QueryInfo = Partial<Knex.Sql> & {
 	sql: Knex.Sql['sql'];
@@ -53,6 +54,7 @@ export function getDatabase(): Knex {
 	const requiredEnvVars = ['DB_CLIENT'];
 
 	switch (client) {
+		case 'better-sqlite3':
 		case 'sqlite3':
 			requiredEnvVars.push('DB_FILENAME');
 			break;
@@ -126,6 +128,32 @@ export function getDatabase(): Knex {
 
 			const run = promisify(conn.run.bind(conn));
 			await run('PRAGMA foreign_keys = ON');
+
+			callback(null, conn);
+		};
+	}
+
+	if (client === 'better-sqlite3') {
+		knexConfig.useNullAsDefault = true;
+
+		poolConfig.afterCreate = (conn: any, callback: any) => {
+			const pragmas = [
+				"busy_timeout=30000",
+				"journal_mode=wal",
+				"journal_size=5242880",
+				"cache_size=-20000",
+				"synchronous=normal",
+				"temp_store=memory",
+				"mmap_size=512000000",
+				"wal_autocheckpoint=0",
+				"foreign_keys=ON"
+			]
+
+			logger.trace('Enabling SQLite Performance Pragmas...');
+
+			pragmas.forEach(pragma => {
+				conn.pragma(pragma)
+			});
 
 			callback(null, conn);
 		};
@@ -255,6 +283,7 @@ export function getDatabaseClient(database?: Knex): DatabaseClient {
 			return 'postgres';
 		case 'Client_CockroachDB':
 			return 'cockroachdb';
+		case 'Client_BetterSQLite3':
 		case 'Client_SQLite3':
 			return 'sqlite';
 		case 'Client_Oracledb':

@@ -61,6 +61,7 @@ EXPOSE 8055
 ENV \
 	DB_CLIENT="better-sqlite3" \
 	DB_FILENAME="/directus/database/database.sqlite" \
+	DB_EXCLUDE_TABLES="_litestream_lock" \
 	NODE_ENV="production" \
 	NPM_CONFIG_UPDATE_NOTIFIER="false"
 

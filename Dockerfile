@@ -4,12 +4,8 @@
 ## Build Packages
 
 FROM node:18-alpine AS builder
-WORKDIR /directus
 
 ARG TARGETPLATFORM
-
-ENV NODE_OPTIONS=--max-old-space-size=8192
-
 RUN <<EOF
   if [ "$TARGETPLATFORM" = 'linux/arm64' ]; then
   	apk --no-cache add python3 build-base
@@ -17,13 +13,22 @@ RUN <<EOF
   fi
 EOF
 
+WORKDIR /directus
+
 COPY package.json .
 RUN corepack enable && corepack prepare
+
+# Deploy as 'node' user to match pnpm setups in production image
+# (see https://github.com/directus/directus/issues/23822)
+RUN chown node:node .
+USER node
+
+ENV NODE_OPTIONS=--max-old-space-size=8192
 
 COPY pnpm-lock.yaml .
 RUN pnpm fetch
 
-COPY . .
+COPY --chown=node:node . .
 RUN <<EOF
 	pnpm install --recursive --offline --frozen-lockfile
 	npm_config_workspace_concurrency=1 pnpm run build
@@ -55,8 +60,6 @@ RUN npm install --global pm2@5 && apk add --no-cache bash
 USER node
 
 WORKDIR /directus
-
-EXPOSE 8055
 
 ENV \
 	DB_CLIENT="better-sqlite3" \
